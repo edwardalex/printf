@@ -1,48 +1,111 @@
 #include "main.h"
 /**
- * _printf - this function produces output accordinng to format
- * @format: format of the output
- * Return: number of characters printed (without NULL)
+ *_printf - printf
+ *@format: const char pointer
+ *Description: this functions implement some functions of printf
+ *Return: num of characteres printed
  */
 int _printf(const char *format, ...)
 {
-	unsigned int i = 0, numC = 0;
-	va_list ap;
-	int (*get)(va_list);
+	const char *string;
+	int cont = 0;
+	va_list arg;
 
-	va_start(ap, format);
-
-	if (!format || !*format)
-		return (-1);
-	if (format[i] == '%' && format[i + 1] == '\0')
+	if (!format)
 		return (-1);
 
-	while (format[i] != '\0')
+	va_start(arg, format);
+	string = format;
+
+	cont = loop_format(arg, string);
+
+	va_end(arg);
+	return (cont);
+}
+/**
+ *loop_format - loop format
+ *@arg: va_list arg
+ *@string: pointer from format
+ *Description: This function make loop tp string pointer
+ *Return: num of characteres printed
+ */
+int loop_format(va_list arg, const char *string)
+{
+	int i = 0, flag = 0, cont_fm = 0, cont = 0, check_per = 0;
+
+	while (i < _strlen((char *)string) && *string != '\0')
 	{
-		if (format[i] == '%')
+		char aux = string[i];
+
+		if (aux == '%')
 		{
-			i++;
-			if (format[i] == '\0')
-				return (numC);
-			get = get_function(&format[i]);
-			if (format[i] == 'c' || format[i] == 's'
-			|| format[i] == '%' || format[i] == 'd'
-			|| format[i] == 'i' || format [i] == 'b')
-				numC += get(ap);
-			else
+			i++, flag++;
+			aux = string[i];
+			if (aux == '\0' && _strlen((char *)string) == 1)
+				return (-1);
+			if (aux == '\0')
+				return (cont);
+			if (aux == '%')
 			{
-				print_character(format[i - 1]);
-				numC += 1;
-				print_character(format[i]);
-				numC += 1;
+				flag++;
+			} else
+			{
+				cont_fm = function_manager(aux, arg);
+				if (cont_fm >= 0 && cont_fm != -1)
+				{
+					i++;
+					aux = string[i];
+					if (aux == '%')
+						flag--;
+					cont = cont + cont_fm;
+				} else if (cont_fm == -1 && aux != '\n')
+				{
+					cont += _putchar('%');
+				}
 			}
 		}
-		else
-		{
-			print_character(format[i]);
-			numC += 1;
-		}
-		i++;
+		check_per = check_percent(&flag, aux);
+		cont += check_per;
+		if (check_per == 0 && aux != '\0' && aux != '%')
+			cont += _putchar(aux), i++;
+		check_per = 0;
 	}
-	return (numC);
+	return (cont);
+}
+/**
+ * check_percent - call function manager
+ *@flag: value by reference
+ *@aux: character
+ *Description: This function print % pear
+ *Return: 1 if % is printed
+ */
+int check_percent(int *flag, char aux)
+{
+	int tmp_flag;
+	int cont = 0;
+
+	tmp_flag = *flag;
+	if (tmp_flag == 2 && aux == '%')
+	{
+		_putchar('%');
+		tmp_flag = 0;
+		cont = 1;
+	}
+	return (cont);
+}
+
+/**
+ * call_function_manager - call function manager
+ *@aux: character parameter
+ *@arg: va_list arg
+ *Description: This function call function manager
+ *Return: num of characteres printed
+ */
+
+int call_function_manager(char aux, va_list arg)
+{
+	int cont = 0;
+
+	cont = function_manager(aux, arg);
+	return (cont);
 }

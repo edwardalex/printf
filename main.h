@@ -1,25 +1,22 @@
-#ifndef _MAIN_H_
-#define _MAIN_H_
-/*LIBRARIES*/
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <stdarg.h>
-#include <string.h>
+#ifndef MAIN_H
+#define MAIN_H
 
-/*STRUCTURES*/
+#include <stdarg.h>
+#include <stddef.h>
+#include <stdlib.h>
+
 /**
- * struct functions - struct made to obtain the correct
- * funtion
- * @var: variable given in _printf function
- * @f: function to call after comparition
+ * struct structprint - structure containing
+ * @q: the location and method to translate data to characters.
+ * @u: print function for specific type.
+ *
+ * Return: int
  */
-typedef struct functions
+typedef struct structprint
 {
-	char *var;
-	int (*f)(va_list);
-} ob_fun;
-/*PROTOTYPES*/
+	char *q;
+	int (*u)(char *format, va_list);
+} structype;
 
 int _putchar(char ch);
 int _puts(char *string);

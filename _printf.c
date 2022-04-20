@@ -1,48 +1,41 @@
 #include "main.h"
 /**
- * _printf - this function produces output accordinng to format
- * @format: format of the output
- * Return: number of characters printed (without NULL)
+ * _printf - format and print data
+ * @format: string to print
+ * Return: length, or -1 in case of failure
  */
 int _printf(const char *format, ...)
 {
-	unsigned int i = 0, numC = 0;
-	va_list ap;
-	int (*get)(va_list);
+	va_list call;
+	unsigned int i, length = 0;
 
-	va_start(ap, format);
+	va_start(call, format);
 
-	if (!format || !*format)
+	if (!format || (format[0] == '%' && format[1] == '\0'))
 		return (-1);
-	if (format[i] == '%' && format[i + 1] == '\0')
-		return (-1);
-
-	while (format[i] != '\0')
+	for (i = 0; format[i] != '\0'; i++) /*runs along the chain*/
 	{
 		if (format[i] == '%')
 		{
-			i++;
-			if (format[i] == '\0')
-				return (numC);
-			get = get_function(&format[i]);
-			if (format[i] == 'c' || format[i] == 's'
-			|| format[i] == '%' || format[i] == 'd'
-			|| format[i] == 'i' || format [i] == 'b')
-				numC += get(ap);
+			if (format[i + 1] == '%')
+			{   _putchar('%');
+				i = i + 1;
+				length++;
+			}
+			else if (mod_character_s(format, i + 1) != '\0')
+			{   length += mod_character_s(format, i + 1)(call);
+				i = i + 1;
+			}
 			else
-			{
-				print_character(format[i - 1]);
-				numC += 1;
-				print_character(format[i]);
-				numC += 1;
+			{ _putchar(format[i]);
+				length++;
 			}
 		}
 		else
-		{
-			print_character(format[i]);
-			numC += 1;
+		{ _putchar(format[i]);
+			length++;
 		}
-		i++;
 	}
-	return (numC);
+	va_end(call);
+	return (length);
 }

@@ -1,14 +1,10 @@
 .\" Manpage for _printf.
-.TH _printf (3) "16 Mar 2021" "1.0" "_printf manpage"
-.so man3./_printf
+.TH _printf 1 "16 Mar 2021" "1.0" "_printf manpage"
+.so man1./_printf
 .SH NAME
     _printf \- format and print data
 .SH SYNOPSIS
-	#include "holberton.h"
-.br
-	_printf [FORMAT] ARGUMENT...
-.br
-	int _printf(const char *format, ...);
+    _printf [FORMAT] ARGUMENT...
 .SH DESCRIPTION
     Prints ARGUMENTS acording to format.
 .br
@@ -25,8 +21,6 @@
 	%r prints a string in reverse
 .SH EXAMPLE IMPLEMENTATION
     _printf("Hello World!");
-.br
-    output: Hello world!
 .SH RETURN VALUE
     Return: the length of the string that is printing.
 .SH BUGS
